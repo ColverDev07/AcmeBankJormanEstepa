@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recuperar contraseña - AcmeBank</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="login-container">
+    <h1>Recuperar Contraseña</h1>
+
+    <!-- Formulario de verificación -->
+    <form id="verifyForm">
+      <label for="verifyIdType">Tipo de Identificación:</label>
+      <select id="verifyIdType" required>
+        <option value="">Seleccione</option>
+        <option value="CC">Cédula de Ciudadanía</option>
+        <option value="TI">Tarjeta de Identidad</option>
+        <option value="CE">Cédula de Extranjería</option>
+      </select>
+
+      <label for="verifyIdNumber">Número de Identificación:</label>
+      <input type="text" id="verifyIdNumber" required />
+
+      <label for="verifyEmail">Correo electrónico:</label>
+      <input type="email" id="verifyEmail" required />
+
+      <button type="submit">Validar identidad</button>
+      <button type="button" id="cancelBtn" class="btn-cancel">Cancelar</button>
+
+      <p id="verifyMessage" class="error-message"></p>
+    </form>
+
+    <!-- Formulario de nueva contraseña (inicialmente oculto) -->
+    <form id="resetForm" style="display:none;">
+      <label for="newPassword">Nueva Contraseña:</label>
+      <input type="password" id="newPassword" required />
+
+      <button type="submit">Actualizar contraseña</button>
+    </form>
+
+    <p id="resetMessage" class="success-message"></p>
+  </div>
+
+  <script src="js/recuperacion.js"></script>
+</body>
+</html>
+

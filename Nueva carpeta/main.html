@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - AcmeBank</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Menú lateral -->
+    <aside class="sidebar">
+      <h2>AcmeBank</h2>
+      <nav>
+        <ul>
+          <li><button onclick="showSection('overview')">Resumen</button></li>
+          <li><button onclick="showSection('transactions')">Transacciones</button></li>
+          <li><button onclick="showSection('deposit')">Consignar</button></li>
+          <li><button onclick="showSection('withdraw')">Retirar</button></li>
+          <li><button onclick="showSection('services')">Pagar Servicios</button></li>
+          <li><button onclick="showSection('statement')">Extracto</button></li>
+          <li><button onclick="showSection('certificate')">Certificado</button></li>
+          <li><button onclick="logout()" class="logout-btn">Cerrar sesión</button></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Área de contenido -->
+    <main class="main-content">
+      <header>
+        <h1 id="welcomeUser">Bienvenido, Usuario</h1>
+      </header>
+
+      <!-- Vista por defecto: resumen -->
+      <section id="overview" class="section active">
+        <h2>Resumen de Cuenta</h2>
+        <div class="card">
+          <p><strong>Número de cuenta:</strong> <span id="accountNumber"></span></p>
+          <p><strong>Fecha de creación:</strong> <span id="createdAt"></span></p>
+          <p><strong>Saldo actual:</strong> <span class="saldo">$<span id="balance"></span></span></p>
+        </div>
+      </section>
+
+      <!-- Secciones adicionales -->
+      <section id="transactions" class="section">[Contenido de Transacciones]</section>
+      <section id="deposit" class="section">[Formulario de Consignación]</section>
+      <section id="withdraw" class="section">[Formulario de Retiro]</section>
+      <section id="services" class="section">[Pago de Servicios]</section>
+      <section id="statement" class="section">[Extracto Bancario]</section>
+      <section id="certificate" class="section">[Certificado Bancario]</section>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - AcmeBank</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Menú lateral -->
+    <aside class="sidebar">
+      <center>
+        <img src="/assets/Acme.jpg" alt="" width="100" height="70">
+      <h2>AcmeBank</h2>
+    </center>
+      <nav>
+        <ul>
+          <li><button onclick="mostrarSeccionDashboard('overview')">Resumen</button></li>
+          <li><button onclick="mostrarSeccionDashboard('transactions')">Transacciones</button></li>
+          <li><button onclick="mostrarSeccionDashboard('deposit')">Consignar</button></li>
+          <li><button onclick="mostrarSeccionDashboard('withdraw')">Retirar</button></li>
+          <li><button onclick="mostrarSeccionDashboard('services')">Pagar Servicios</button></li>
+          <li><button onclick="mostrarSeccionDashboard('statement')">Extracto</button></li>
+          <li><button onclick="mostrarSeccionDashboard('certificate')">Certificado</button></li>
+          <li><button onclick="logout()" class="logout-btn">Cerrar sesión</button></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Área de contenido -->
+    <main class="main-content">
+      <header>
+        <button id="menuToggle" aria-label="Abrir menú" class="hamburger-menu">
+          <span></span><span></span><span></span>
+        </button>
+        <h1 id="welcomeUser">Bienvenido, Usuario</h1>
+      </header>
+
+      <!-- Vista por defecto: resumen -->
+      <section id="overview" class="section active">
+        <h2>Resumen de Cuenta</h2>
+        <div class="card">
+          <p><strong>Número de cuenta:</strong> <span id="accountNumber"></span></p>
+          <p><strong>Fecha de creación:</strong> <span id="createdAt"></span></p>
+          <p><strong>Saldo actual:</strong> <span class="saldo">$<span id="balance"></span></span></p>
+        </div>
+      </section>
+
+      <!-- Secciones adicionales -->
+      <section id="transactions" class="section">
+        <h2>Últimas Transacciones</h2>
+        <div class="card">
+          <table id="transactionsTable">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Referencia</th>
+                <th>Tipo</th>
+                <th>Descripción</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Transacciones se llenan dinámicamente -->
+            </tbody>
+          </table>
+          <button onclick="imprimirSeccion('transactions')">Imprimir Resumen</button>
+        </div>
+      </section>
+      <section id="deposit" class="section">
+        <h2>Consignar Dinero</h2>
+        <div class="card">
+          <form id="depositForm">
+            <p><strong>Número de cuenta:</strong> <span id="depositAccountNumber"></span></p>
+            <p><strong>Nombre completo:</strong> <span id="depositFullName"></span></p>
+            <label for="depositAmount">Monto a consignar:</label>
+            <input type="number" id="depositAmount" min="1" step="0.01" required />
+            <button type="submit">Consignar</button>
+            <p id="depositMsg" class="success-message" style="display:none;"></p>
+          </form>
+          <div id="depositSummary" style="display:none;">
+            <h3>Resumen de Consignación</h3>
+            <p><strong>Fecha:</strong> <span id="depositDate"></span></p>
+            <p><strong>Referencia:</strong> <span id="depositRef"></span></p>
+            <p><strong>Tipo:</strong> Consignación</p>
+            <p><strong>Descripción:</strong> Consignación por canal electrónico</p>
+            <p><strong>Valor:</strong> $<span id="depositValue"></span></p>
+            <button onclick="imprimirSeccion('depositSummary')">Imprimir Resumen</button>
+          </div>
+        </div>
+      </section>
+      <section id="withdraw" class="section">
+        <h2>Retirar Dinero</h2>
+        <div class="card">
+          <form id="withdrawForm">
+            <p><strong>Número de cuenta:</strong> <span id="withdrawAccountNumber"></span></p>
+            <p><strong>Nombre completo:</strong> <span id="withdrawFullName"></span></p>
+            <label for="withdrawAmount">Monto a retirar:</label>
+            <input type="number" id="withdrawAmount" min="1" step="0.01" required />
+            <button type="submit">Retirar</button>
+            <p id="withdrawMsg" class="error-message" style="display:none;"></p>
+          </form>
+          <div id="withdrawSummary" style="display:none;">
+            <h3>Resumen de Retiro</h3>
+            <p><strong>Fecha:</strong> <span id="withdrawDate"></span></p>
+            <p><strong>Referencia:</strong> <span id="withdrawRef"></span></p>
+            <p><strong>Tipo:</strong> Retiro</p>
+            <p><strong>Descripción:</strong> Retiro de dinero</p>
+            <p><strong>Valor:</strong> $<span id="withdrawValue"></span></p>
+            <button onclick="imprimirSeccion('withdrawSummary')">Imprimir Resumen</button>
+          </div>
+        </div>
+      </section>
+      <section id="services" class="section">
+        <h2>Pagar Servicios Públicos</h2>
+        <div class="card">
+          <form id="servicesForm">
+            <p><strong>Número de cuenta:</strong> <span id="servicesAccountNumber"></span></p>
+            <p><strong>Nombre completo:</strong> <span id="servicesFullName"></span></p>
+            <label for="serviceType">Servicio a pagar:</label>
+            <select id="serviceType" required>
+              <option value="">Seleccione</option>
+              <option value="Energía">Energía</option>
+              <option value="Agua">Agua</option>
+              <option value="Gas Natural">Gas Natural</option>
+              <option value="Internet">Internet</option>
+            </select>
+            <label for="serviceRef">Referencia:</label>
+            <input type="text" id="serviceRef" required />
+            <label for="serviceValue">Valor a pagar:</label>
+            <input type="number" id="serviceValue" min="1" step="0.01" required />
+            <button type="submit">Pagar</button>
+            <p id="servicesMsg" class="success-message" style="display:none;"></p>
+          </form>
+          <div id="servicesSummary" style="display:none;">
+            <h3>Resumen de Pago de Servicio</h3>
+            <p><strong>Fecha:</strong> <span id="servicesDate"></span></p>
+            <p><strong>Referencia:</strong> <span id="servicesRefSummary"></span></p>
+            <p><strong>Tipo:</strong> Retiro</p>
+            <p><strong>Descripción:</strong> Pago de servicio público <span id="servicesTypeSummary"></span></p>
+            <p><strong>Valor:</strong> $<span id="servicesValueSummary"></span></p>
+            <button onclick="imprimirSeccion('servicesSummary')">Imprimir Resumen</button>
+          </div>
+        </div>
+      </section>
+      <section id="statement" class="section">
+        <h2>Extracto Bancario</h2>
+        <div class="card">
+          <p><strong>Número de cuenta:</strong> <span id="statementAccountNumber"></span></p>
+          <p><strong>Nombre completo:</strong> <span id="statementFullName"></span></p>
+          <form id="statementForm">
+            <label for="statementYear">Año:</label>
+            <input type="number" id="statementYear" min="2000" max="2100" required />
+            <label for="statementMonth">Mes:</label>
+            <select id="statementMonth" required>
+              <option value="">Seleccione</option>
+              <option value="1">Enero</option>
+              <option value="2">Febrero</option>
+              <option value="3">Marzo</option>
+              <option value="4">Abril</option>
+              <option value="5">Mayo</option>
+              <option value="6">Junio</option>
+              <option value="7">Julio</option>
+              <option value="8">Agosto</option>
+              <option value="9">Septiembre</option>
+              <option value="10">Octubre</option>
+              <option value="11">Noviembre</option>
+              <option value="12">Diciembre</option>
+            </select>
+            <button type="submit">Generar Extracto</button>
+          </form>
+          <div id="statementResult" style="display:none;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Referencia</th>
+                  <th>Tipo</th>
+                  <th>Descripción</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody id="statementTableBody">
+                <!-- Movimientos se llenan dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      <section id="certificate" class="section">
+        <h2>Certificado Bancario</h2>
+        <div class="card" id="certificateContent">
+          <p>AcmeBank certifica que el(la) señor(a): <strong><span id="certificateFullName"></span></strong></p>
+          <p>Identificado(a) con número de cuenta: <strong><span id="certificateAccountNumber"></span></strong></p>
+          <p>Posee una cuenta activa en nuestra entidad desde el día <strong><span id="certificateCreatedAt"></span></strong>.</p>
+          <p>Este certificado se expide a solicitud del interesado para los fines que estime convenientes.</p>
+          <br />
+          <p>En la ciudad de <span id="certificateCity">[Ciudad]</span> a los <span id="certificateDate">[Fecha]</span>.</p>
+          <button onclick="imprimirSeccion('certificateContent')">Imprimir Certificado</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
