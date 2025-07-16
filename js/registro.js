@@ -52,6 +52,15 @@ document.getElementById("registerForm").addEventListener("submit", function (e) 
     // Generar número de cuenta única y saldo inicial
     nuevoUsuario.accountNumber = `ACME-${String(usuariosRegistrados.length + 1).padStart(4, "0")}`;
     nuevoUsuario.balance = 0;
+
+    // Generar fecha de vencimiento aleatoria (3-5 años en el futuro)
+    const hoy = new Date();
+    const mes = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+    const anio = hoy.getFullYear() + 3 + Math.floor(Math.random() * 3); // 3-5 años
+    nuevoUsuario.expiry = `${mes}/${String(anio).slice(-2)}`;
+
+    // Color de tarjeta por defecto
+    nuevoUsuario.cardColor = '#00b6ff';
   
     // Guardar usuario y movimientos en LocalStorage
     usuariosRegistrados.push(nuevoUsuario);
@@ -81,49 +90,47 @@ document.getElementById("registerForm").addEventListener("submit", function (e) 
   const mensajeExitoRegistro = document.getElementById("registerSuccess");
   const botonCrearCuenta = formularioRegistro.querySelector('button[type="submit"]');
 
-  function validarCampoRegistro(campo, validador, mensaje) {
-    campo.addEventListener('input', function() {
-      if (!validador(campo.value)) {
-        campo.style.borderColor = '#e53935';
-        mensajeErrorRegistro.textContent = mensaje;
+  // --- VALIDACIÓN EN TIEMPO REAL DE TODOS LOS CAMPOS ---
+  const camposRegistro = [
+    { id: 'idType', validador: v => v !== '', mensaje: 'Seleccione un tipo de identificación.' },
+    { id: 'idNumber', validador: v => /^\d+$/.test(v.trim()), mensaje: 'El número de identificación solo debe contener números.' },
+    { id: 'firstName', validador: v => v.trim() !== '', mensaje: 'El nombre es obligatorio.' },
+    { id: 'lastName', validador: v => v.trim() !== '', mensaje: 'El apellido es obligatorio.' },
+    { id: 'gender', validador: v => v !== '', mensaje: 'Seleccione un género.' },
+    { id: 'phone', validador: v => /^\d+$/.test(v.trim()), mensaje: 'El teléfono solo debe contener números.' },
+    { id: 'email', validador: v => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.trim()), mensaje: 'Ingrese un correo válido.' },
+    { id: 'address', validador: v => v.trim() !== '', mensaje: 'La dirección es obligatoria.' },
+    { id: 'city', validador: v => v.trim() !== '', mensaje: 'La ciudad es obligatoria.' },
+    { id: 'password', validador: v => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(v), mensaje: 'La contraseña debe tener mínimo 8 caracteres, mayúscula, minúscula y número.' }
+  ];
+
+  function validarFormularioRegistroTiempoReal() {
+    let valido = true;
+    for (const campo of camposRegistro) {
+      const input = document.getElementById(campo.id);
+      if (!campo.validador(input.value)) {
+        valido = false;
+        input.style.borderColor = '#e53935';
+        mensajeErrorRegistro.textContent = campo.mensaje;
         mensajeErrorRegistro.style.display = 'block';
         botonCrearCuenta.disabled = true;
+        break;
       } else {
-        campo.style.borderColor = '';
+        input.style.borderColor = '';
         mensajeErrorRegistro.style.display = 'none';
-        botonCrearCuenta.disabled = false;
       }
-    });
+    }
+    if (valido) {
+      mensajeErrorRegistro.style.display = 'none';
+      botonCrearCuenta.disabled = false;
+    }
   }
 
-  // Validadores para los campos
-  const noVacio = v => v.trim() !== '';
-  const soloNumeros = v => /^\d+$/.test(v.trim());
-  const correoValido = v => /^[\w-.]+@([\w-]+\.)+[\w-]{2,}$/.test(v.trim());
-  const passwordSeguro = v => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(v);
-
-  validarCampoRegistro(document.getElementById('idNumber'), soloNumeros, 'El número de identificación solo debe contener números.');
-  validarCampoRegistro(document.getElementById('firstName'), noVacio, 'El nombre es obligatorio.');
-  validarCampoRegistro(document.getElementById('lastName'), noVacio, 'El apellido es obligatorio.');
-  validarCampoRegistro(document.getElementById('phone'), soloNumeros, 'El teléfono solo debe contener números.');
-  validarCampoRegistro(document.getElementById('email'), correoValido, 'Ingrese un correo electrónico válido.');
-  validarCampoRegistro(document.getElementById('address'), noVacio, 'La dirección es obligatoria.');
-  validarCampoRegistro(document.getElementById('city'), noVacio, 'La ciudad es obligatoria.');
-  validarCampoRegistro(document.getElementById('password'), passwordSeguro, 'La contraseña debe tener mínimo 8 caracteres, mayúscula, minúscula y número.');
-
-  // Validación en selects
-  ['idType','gender'].forEach(id => {
-    document.getElementById(id).addEventListener('change', function() {
-      if (this.value === '') {
-        this.style.borderColor = '#e53935';
-        mensajeErrorRegistro.textContent = 'Seleccione una opción válida.';
-        mensajeErrorRegistro.style.display = 'block';
-        botonCrearCuenta.disabled = true;
-      } else {
-        this.style.borderColor = '';
-        mensajeErrorRegistro.style.display = 'none';
-        botonCrearCuenta.disabled = false;
-      }
-    });
+  camposRegistro.forEach(campo => {
+    const input = document.getElementById(campo.id);
+    input.addEventListener('input', validarFormularioRegistroTiempoReal);
+    if (input.tagName === 'SELECT') {
+      input.addEventListener('change', validarFormularioRegistroTiempoReal);
+    }
   });
   

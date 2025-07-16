@@ -24,9 +24,10 @@
           <li><button onclick="mostrarSeccionDashboard('services')">Pagar Servicios</button></li>
           <li><button onclick="mostrarSeccionDashboard('statement')">Extracto</button></li>
           <li><button onclick="mostrarSeccionDashboard('certificate')">Certificado</button></li>
-          <li><button onclick="logout()" class="logout-btn">Cerrar sesión</button></li>
         </ul>
       </nav>
+      <hr class="sidebar-divider">
+      <button onclick="logout()" class="logout-btn">Cerrar sesión</button>
     </aside>
 
     <!-- Área de contenido -->
@@ -41,53 +42,107 @@
       <!-- Vista por defecto: resumen -->
       <section id="overview" class="section active">
         <h2>Resumen de Cuenta</h2>
-        <div class="card">
-          <p><strong>Número de cuenta:</strong> <span id="accountNumber"></span></p>
-          <p><strong>Fecha de creación:</strong> <span id="createdAt"></span></p>
-          <p><strong>Saldo actual:</strong> <span class="saldo">$<span id="balance"></span></span></p>
+        <div class="credit-card" id="creditCard">
+          <div class="credit-card__chip"></div>
+          <div class="credit-card__logo" aria-label="Logo Visa"><!-- Logo Visa aquí --></div>
+          <div class="credit-card__content">
+            <div class="credit-card__bank">AcmeBank</div>
+            <div class="credit-card__number-row">
+              <div class="credit-card__number" id="cardAccountNumber">•••• •••• •••• 1234</div>
+              <button id="copyAccountBtn" class="credit-card__copy-btn" title="Copiar número de cuenta" aria-label="Copiar número de cuenta"><span>📋</span></button>
+            </div>
+            <div class="credit-card__info-row">
+              <div>
+                <span class="credit-card__label">Titular</span>
+                <span class="credit-card__value" id="cardFullName">Usuario</span>
+              </div>
+              <div>
+                <span class="credit-card__label">Saldo</span>
+                <span class="credit-card__value" id="cardBalance">$0.00</span>
+                <button id="toggleBalanceBtn" class="credit-card__eye-btn" title="Mostrar/Ocultar saldo" aria-label="Mostrar/Ocultar saldo"><span id="eyeIcon">👁️</span></button>
+              </div>
+              <div>
+                <span class="credit-card__label">Vence</span>
+                <span class="credit-card__value" id="cardExpiry">12/29</span>
+              </div>
+            </div>
+          </div>
+          <div class="credit-card__color-selector" aria-label="Selector de color de tarjeta">
+            <span class="color-option" data-color="#00b6ff" style="background:#00b6ff" tabindex="0" aria-label="Azul"></span>
+            <span class="color-option" data-color="#00e0e6" style="background:#00e0e6" tabindex="0" aria-label="Cian"></span>
+            <span class="color-option" data-color="#ffb300" style="background:#ffb300" tabindex="0" aria-label="Amarillo"></span>
+            <span class="color-option" data-color="#a259ff" style="background:#a259ff" tabindex="0" aria-label="Morado"></span>
+            <span class="color-option" data-color="#ff5e5e" style="background:#ff5e5e" tabindex="0" aria-label="Rojo"></span>
+          </div>
+        </div>
+        <div class="credit-card__extras">
+          <div class="credit-card__status-row">
+            <span class="credit-card__status-label">Estado de la cuenta:</span>
+            <span class="credit-card__status-value" id="cardStatus">Activa</span>
+          </div>
+          <div class="credit-card__movements">
+            <span class="credit-card__movements-title">Últimos movimientos</span>
+            <ul id="lastMovementsList" class="credit-card__movements-list" aria-live="polite"></ul>
+          </div>
         </div>
       </section>
 
       <!-- Secciones adicionales -->
       <section id="transactions" class="section">
-        <h2>Últimas Transacciones</h2>
-        <div class="card">
-          <table id="transactionsTable">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Referencia</th>
-                <th>Tipo</th>
-                <th>Descripción</th>
-                <th>Valor</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Transacciones se llenan dinámicamente -->
-            </tbody>
-          </table>
-          <button onclick="imprimirSeccion('transactions')">Imprimir Resumen</button>
+        <h2>Transacciones</h2>
+        <div class="transactions-summary card">
+          <div class="transactions-summary-item">
+            <span class="transactions-summary-label">Saldo actual</span>
+            <span class="transactions-summary-value" id="transSaldo">$0.00</span>
+          </div>
+          <div class="transactions-summary-item">
+            <span class="transactions-summary-label">Ingresos</span>
+            <span class="transactions-summary-value ingresos" id="transIngresos">$0.00</span>
+          </div>
+          <div class="transactions-summary-item">
+            <span class="transactions-summary-label">Egresos</span>
+            <span class="transactions-summary-value egresos" id="transEgresos">$0.00</span>
+          </div>
         </div>
+        <div class="transactions-filters card">
+          <select id="transTipoFiltro" aria-label="Filtrar por tipo">
+            <option value="">Todos los tipos</option>
+            <option value="Consignación">Consignación</option>
+            <option value="Retiro">Retiro</option>
+            <option value="Pago">Pago</option>
+          </select>
+          <input type="month" id="transFechaFiltro" aria-label="Filtrar por mes" />
+        </div>
+        <ul id="transactionsTimeline" class="transactions-timeline" aria-live="polite"></ul>
       </section>
       <section id="deposit" class="section">
         <h2>Consignar Dinero</h2>
-        <div class="card">
-          <form id="depositForm">
+        <div class="card deposit-panel">
+          <div class="deposit-icon" aria-hidden="true">💰</div>
+          <form id="depositForm" autocomplete="off">
             <p><strong>Número de cuenta:</strong> <span id="depositAccountNumber"></span></p>
             <p><strong>Nombre completo:</strong> <span id="depositFullName"></span></p>
             <label for="depositAmount">Monto a consignar:</label>
-            <input type="number" id="depositAmount" min="1" step="0.01" required />
-            <button type="submit">Consignar</button>
+            <input type="number" id="depositAmount" min="1" step="0.01" required aria-label="Monto a consignar" autofocus />
+            <div class="form-btn-row">
+              <button type="submit">Consignar</button>
+              <button type="button" id="depositClearBtn" class="btn-cancel">Limpiar</button>
+            </div>
+            <div id="depositLoader" class="deposit-loader" style="display:none;"></div>
             <p id="depositMsg" class="success-message" style="display:none;"></p>
+            <p id="depositError" class="error-message" style="display:none;"></p>
           </form>
-          <div id="depositSummary" style="display:none;">
-            <h3>Resumen de Consignación</h3>
+          <div id="depositSummary" class="deposit-summary" style="display:none;">
+            <div class="deposit-summary-icon">✅</div>
+            <h3>Consignación Exitosa</h3>
             <p><strong>Fecha:</strong> <span id="depositDate"></span></p>
             <p><strong>Referencia:</strong> <span id="depositRef"></span></p>
-            <p><strong>Tipo:</strong> Consignación</p>
-            <p><strong>Descripción:</strong> Consignación por canal electrónico</p>
-            <p><strong>Valor:</strong> $<span id="depositValue"></span></p>
-            <button onclick="imprimirSeccion('depositSummary')">Imprimir Resumen</button>
+            <p><strong>Monto consignado:</strong> <span id="depositValue"></span></p>
+            <p><strong>Saldo actual:</strong> <span id="depositSaldo"></span></p>
+            <div class="form-btn-row">
+              <button onclick="imprimirSeccion('depositSummary')">Imprimir Resumen</button>
+              <button id="depositCopyBtn" type="button">Copiar Resumen</button>
+            </div>
           </div>
         </div>
       </section>

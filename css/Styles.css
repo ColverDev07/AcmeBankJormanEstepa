@@ -1,28 +1,32 @@
 
-/* Reset básico y variables CSS */
+/* =========================
+   PALETA DE COLORES MODO OSCURO
+   - Fondo principal: #18181b
+   - Tarjetas/paneles: #232325
+   - Texto principal: #fff
+   - Texto secundario: #b3b3b3
+   - Acento azul: #00b6ff
+   - Acento cian: #00e0e6
+   - Bordes: #33343a
+   ========================= */
 :root {
-  --primary-color: #2563eb;
-  --primary-dark: #1d4ed8;
-  --secondary-color: #059669;
-  --accent-color: #f59e0b;
-  --danger-color: #dc2626;
-  --success-color: #16a34a;
-  --warning-color: #d97706;
-  --gray-50: #f8fafc;
-  --gray-100: #f1f5f9;
-  --gray-200: #e2e8f0;
-  --gray-300: #cbd5e1;
-  --gray-400: #94a3b8;
-  --gray-500: #64748b;
-  --gray-600: #475569;
-  --gray-700: #334155;
-  --gray-800: #1e293b;
-  --gray-900: #0f172a;
-  --white: #ffffff;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  /* Colores principales */
+  --primary-bg: #18181b;         /* Fondo general */
+  --card-bg: #232325;            /* Fondo de tarjetas/paneles */
+  --sidebar-bg: #18181b;         /* Fondo sidebar */
+  --sidebar-card-bg: #232325;    /* Fondo tarjetas en sidebar */
+  --primary-color: #00b6ff;      /* Azul acento */
+  --primary-dark: #0090c7;       /* Azul oscuro */
+  --secondary-color: #00e0e6;    /* Cian acento */
+  --danger-color: #dc2626;       /* Rojo para errores */
+  --success-color: #16a34a;      /* Verde para éxito */
+  --warning-color: #d97706;      /* Amarillo para advertencias */
+  --text-main: #fff;             /* Texto principal */
+  --text-secondary: #b3b3b3;     /* Texto secundario */
+  --border-color: #33343a;       /* Bordes suaves */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.10);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.18), 0 2px 4px -2px rgb(0 0 0 / 0.13);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.18), 0 4px 6px -4px rgb(0 0 0 / 0.13);
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
@@ -35,10 +39,13 @@
   box-sizing: border-box;
 }
 
+/* =========================
+   FONDO GENERAL Y TEXTO
+   ========================= */
 body, html {
   font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: var(--gray-900);
+  background: var(--primary-bg); /* Fondo oscuro */
+  color: var(--text-main);       /* Texto blanco */
   min-height: 100vh;
   line-height: 1.6;
 }
@@ -47,15 +54,15 @@ body, html {
 .dashboard-container {
   display: flex;
   min-height: 100vh;
-  background: var(--gray-50);
+  background: var(--primary-bg); /* Fondo oscuro */
 }
 
 .sidebar {
-  background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-  color: var(--white);
+  background: var(--sidebar-bg); /* Fondo sidebar */
+  color: var(--text-main);
   width: 280px;
   padding: 2rem 1.5rem;
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--shadow-lg);
   position: relative;
   overflow: hidden;
 }
@@ -95,7 +102,7 @@ body, html {
 .sidebar nav ul li button {
   background: none;
   border: none;
-  color: var(--white);
+  color: var(--text-main);
   font-size: 1rem;
   cursor: pointer;
   padding: 1rem 1.5rem;
@@ -111,8 +118,8 @@ body, html {
 
 .sidebar nav ul li button:hover,
 .sidebar nav ul li button.active {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
+  background: var(--card-bg);
+  color: var(--primary-color);
   transform: translateX(4px);
   box-shadow: var(--shadow-md);
 }
@@ -133,42 +140,63 @@ body, html {
   transform: scale(1.2);
 }
 
-.logout-btn {
-  background: linear-gradient(135deg, var(--danger-color) 0%, #b91c1c 100%) !important;
-  color: var(--white) !important;
-  font-weight: 600;
-  margin-top: 2rem;
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-md);
+.sidebar-divider {
+  border: none;
+  border-top: 2px solid var(--border-color);
+  margin: 2.5rem 0 1.5rem 0;
+  width: 100%;
+  opacity: 0.7;
 }
 
-.logout-btn:hover {
-  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%) !important;
-  transform: translateY(-2px);
+.logout-btn {
+  display: block;
+  width: 100%;
+  background: linear-gradient(135deg, var(--danger-color) 0%, #b91c1c 100%) !important;
+  color: var(--text-main) !important;
+  font-weight: 700;
+  margin: 0;
+  padding: 1rem 0;
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
+  border: none;
+  font-size: 1.08rem;
+  letter-spacing: 0.03em;
+  transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.logout-btn:hover,
+.logout-btn:focus {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%) !important;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(220,38,38,0.18);
+  outline: 2px solid var(--danger-color);
 }
 
 /* ====== MAIN CONTENT ====== */
 .main-content {
   flex: 1;
   padding: 2rem;
-  background: var(--gray-50);
+  background: var(--primary-bg); /* Fondo oscuro */
   overflow-y: auto;
 }
 
 header {
-  background: var(--white);
+  background: var(--card-bg); /* Fondo de tarjetas */
   border-radius: var(--radius-xl);
   padding: 1.5rem 2rem;
   margin-bottom: 2rem;
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border-color);
 }
 
 header h1 {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--gray-900);
+  color: var(--text-main);
   margin: 0;
   letter-spacing: -0.025em;
 }
@@ -184,7 +212,7 @@ header h1 {
 }
 
 .section h2 {
-  color: var(--gray-900);
+  color: var(--text-main);
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
@@ -202,27 +230,22 @@ header h1 {
   }
 }
 
-/* ====== CARDS ====== */
+/* =========================
+   TARJETAS Y PANELES
+   ========================= */
 .card {
-  background: var(--white);
+  background: #232325; /* Fondo sólido oscuro */
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   padding: 2rem;
   margin-bottom: 2rem;
-  border: 1px solid var(--gray-200);
+  border: 2.5px solid var(--primary-color); /* Borde cian */
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
-
 .card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+  display: none !important;
 }
 
 .card:hover {
@@ -231,53 +254,54 @@ header h1 {
 }
 
 .card h3 {
-  color: var(--primary-color);
+  color: var(--primary-color); /* Título azul */
   margin-bottom: 1rem;
   font-size: 1.25rem;
   font-weight: 600;
 }
 
-/* ====== FORMS ====== */
+/* =========================
+   FORMULARIOS E INPUTS
+   ========================= */
 label {
   display: block;
   margin: 1.5rem 0 0.5rem 0;
   font-weight: 600;
-  color: var(--gray-700);
+  color: var(--text-secondary);
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-
 input, select {
   width: 100%;
   padding: 0.875rem 1rem;
-  border: 2px solid var(--gray-200);
+  border: 2px solid var(--primary-color);
   border-radius: var(--radius-md);
   font-size: 1rem;
   margin-bottom: 1rem;
-  background: var(--white);
-  color: var(--gray-900);
+  background: #232325;
+  color: var(--text-main);
   transition: all 0.3s ease;
   font-family: inherit;
 }
-
 input:focus, select:focus {
-  border-color: var(--primary-color);
+  border-color: var(--secondary-color);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 224, 230, 0.15);
   transform: translateY(-1px);
 }
-
 input:hover, select:hover {
-  border-color: var(--gray-300);
+  border-color: var(--secondary-color);
 }
 
-/* ====== BUTTONS ====== */
+/* =========================
+   BOTONES
+   ========================= */
 button[type="submit"],
 .card button,
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-  color: var(--white);
+  background: var(--primary-color);
+  color: var(--text-main);
   border: none;
   padding: 0.875rem 1.75rem;
   border-radius: var(--radius-md);
@@ -290,30 +314,18 @@ button[type="submit"],
   letter-spacing: 0.05em;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--shadow-md);
 }
-
 button[type="submit"]::before,
 .card button::before,
 .btn-primary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
+  display: none !important;
 }
-
-button[type="submit"]:hover::before,
-.card button:hover::before,
-.btn-primary:hover::before {
-  left: 100%;
-}
-
 button[type="submit"]:hover,
 .card button:hover,
 .btn-primary:hover {
+  background: var(--secondary-color);
+  color: #232325;
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
@@ -325,39 +337,81 @@ button[type="submit"]:active,
 }
 
 .btn-secondary {
-  background: var(--white);
+  background: var(--card-bg);
   color: var(--primary-color);
   border: 2px solid var(--primary-color);
 }
 
 .btn-secondary:hover {
   background: var(--primary-color);
-  color: var(--white);
+  color: var(--text-main);
 }
 
+/* =========================
+   BOTÓN CANCELAR (REGISTRO)
+   ========================= */
 .btn-cancel {
-  background: linear-gradient(135deg, var(--gray-400) 0%, var(--gray-500) 100%);
-  color: var(--white);
+  background: linear-gradient(135deg, var(--border-color) 0%, #444 100%);
+  color: var(--text-main);
+  border: none;
+  padding: 0.875rem 1.75rem;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  margin-left: 0.5rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-block;
+  vertical-align: middle;
 }
 
-.btn-cancel:hover {
-  background: linear-gradient(135deg, var(--gray-500) 0%, var(--gray-600) 100%);
+.btn-cancel:hover,
+.btn-cancel:focus {
+  background: linear-gradient(135deg, #444 0%, var(--border-color) 100%);
+  color: var(--primary-color);
+  outline: 2px solid var(--primary-color);
 }
 
-/* ====== TABLES ====== */
+/* =========================
+   FILA DE BOTONES EN FORMULARIO DE REGISTRO
+   ========================= */
+.form-btn-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+@media (max-width: 480px) {
+  .form-btn-row {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+    justify-content: center;
+  }
+}
+
+/* =========================
+   TABLAS
+   ========================= */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1.5rem;
-  background: var(--white);
+  background: var(--card-bg);
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-md);
 }
 
 table th {
-  background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
-  color: var(--gray-700);
+  background: var(--sidebar-card-bg);
+  color: var(--text-secondary);
   font-weight: 600;
   padding: 1rem;
   text-align: left;
@@ -368,8 +422,8 @@ table th {
 
 table td {
   padding: 1rem;
-  border-bottom: 1px solid var(--gray-200);
-  color: var(--gray-800);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-main);
 }
 
 table tr:last-child td {
@@ -377,14 +431,16 @@ table tr:last-child td {
 }
 
 table tr:hover {
-  background: var(--gray-50);
+  background: #23282e;
 }
 
-/* ====== MESSAGES ====== */
+/* =========================
+   MENSAJES Y ALERTAS
+   ========================= */
 .success-message {
-  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  background: linear-gradient(135deg, #1e3a1e 0%, #14532d 100%);
   color: var(--success-color);
-  border: 1px solid #86efac;
+  border: 1px solid #14532d;
   border-radius: var(--radius-md);
   padding: 1rem;
   margin: 1rem 0;
@@ -397,7 +453,7 @@ table tr:hover {
 .success-message::before {
   content: '✓';
   background: var(--success-color);
-  color: var(--white);
+  color: var(--text-main);
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -408,9 +464,9 @@ table tr:hover {
 }
 
 .error-message {
-  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+  background: linear-gradient(135deg, #2a1818 0%, #3a2323 100%);
   color: var(--danger-color);
-  border: 1px solid #fca5a5;
+  border: 1px solid #dc2626;
   border-radius: var(--radius-md);
   padding: 1rem;
   margin: 1rem 0;
@@ -420,23 +476,14 @@ table tr:hover {
   gap: 0.5rem;
 }
 
-.error-message::before {
-  content: '✕';
-  background: var(--danger-color);
-  color: var(--white);
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
+.error-message:empty {
+  display: none !important;
 }
 
 .warning-message {
-  background: linear-gradient(135deg, #fffbeb 0%, #fed7aa 100%);
+  background: linear-gradient(135deg, #3a2a18 0%, #3a2a18 100%);
   color: var(--warning-color);
-  border: 1px solid #fdba74;
+  border: 1px solid #d97706;
   border-radius: var(--radius-md);
   padding: 1rem;
   margin: 1rem 0;
@@ -449,7 +496,7 @@ table tr:hover {
 .warning-message::before {
   content: '⚠';
   background: var(--warning-color);
-  color: var(--white);
+  color: var(--text-main);
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -472,29 +519,25 @@ table tr:hover {
   border: 2px solid #86efac;
 }
 
-/* ====== LOGIN CONTAINER ====== */
+/* =========================
+   LOGIN CONTAINER (REGISTRO Y LOGIN)
+   ========================= */
 .login-container {
-  background: var(--white);
-  color: var(--gray-900);
-  padding: 3rem 2.5rem;
+  background: #232325;
+  color: var(--text-main);
+  padding: 4rem 3rem;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-xl);
-  width: 95%;
-  max-width: 450px;
-  margin: 4vh auto;
-  border: 1px solid var(--gray-200);
+  width: 98%;
+  max-width: 650px;
+  margin: 6vh auto;
+  border: 2.5px solid var(--primary-color);
   position: relative;
   overflow: hidden;
+  font-size: 1.15rem;
 }
-
 .login-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6px;
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+  display: none !important;
 }
 
 .img1 {
@@ -507,8 +550,8 @@ table tr:hover {
 .img1 img {
   border-radius: 50%;
   box-shadow: var(--shadow-lg);
-  border: 4px solid var(--gray-200);
-  background: var(--white);
+  border: 4px solid var(--border-color);
+  background: var(--card-bg);
   transition: all 0.3s ease;
 }
 
@@ -520,7 +563,7 @@ table tr:hover {
 .login-container h1 {
   text-align: center;
   font-size: 2rem;
-  color: var(--gray-900);
+  color: var(--text-main);
   margin-bottom: 2rem;
   font-weight: 700;
   letter-spacing: -0.025em;
@@ -528,11 +571,11 @@ table tr:hover {
 
 .login-container form {
   width: 100%;
-  background: var(--gray-50);
+  background: #232325;
   border-radius: var(--radius-lg);
   padding: 2rem;
   margin-bottom: 1.5rem;
-  border: 1px solid var(--gray-200);
+  border: 2px solid var(--primary-color);
 }
 
 .login-links {
@@ -566,34 +609,28 @@ table tr:hover {
 }
 
 .login-links a:hover {
-  color: var(--primary-dark);
+  color: var(--secondary-color);
 }
 
-/* ====== TRANSACTION SUMMARIES ====== */
+/* =========================
+   RESUMENES DE TRANSACCIONES
+   ========================= */
 #depositSummary,
 #withdrawSummary,
 #servicesSummary {
-  background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
-  border: 2px solid var(--primary-color);
+  background: #232325;
+  border: 2.5px solid var(--primary-color);
   border-radius: var(--radius-xl);
   padding: 2rem;
   margin-top: 2rem;
   box-shadow: var(--shadow-lg);
   position: relative;
 }
-
 #depositSummary::before,
 #withdrawSummary::before,
 #servicesSummary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  display: none !important;
 }
-
 #depositSummary h3,
 #withdrawSummary h3,
 #servicesSummary h3 {
@@ -603,20 +640,121 @@ table tr:hover {
   font-size: 1.5rem;
   font-weight: 700;
 }
-
 #depositSummary p,
 #withdrawSummary p,
 #servicesSummary p {
   margin: 0.75rem 0;
-  color: var(--gray-700);
+  color: var(--text-main);
   font-size: 1.1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem;
   border-radius: var(--radius-md);
-  background: var(--white);
+  background: #232325;
   box-shadow: var(--shadow-sm);
+  border: 1.5px solid #292929;
+}
+
+/* =========================
+   TARJETA DE CRÉDITO EN DASHBOARD
+   ========================= */
+.credit-card {
+  background: #232325;
+  color: var(--text-main);
+  border-radius: 2rem;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.28);
+  padding: 3.5rem 3rem 2.5rem 3rem;
+  max-width: 650px;
+  margin: 2.5rem 0 3rem 0;
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+  border: 2.5px solid var(--primary-color);
+  font-family: 'Inter', 'Poppins', sans-serif;
+  transition: box-shadow 0.3s;
+}
+.credit-card__chip {
+  width: 60px;
+  height: 40px;
+  background: #b3b3b3;
+  border-radius: 12px;
+  position: absolute;
+  top: 1.8rem;
+  left: 2.2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+.credit-card__content {
+  margin-top: 2.2rem;
+}
+.credit-card__bank {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  margin-bottom: 2rem;
+  color: var(--secondary-color);
+}
+.credit-card__number {
+  font-size: 2.1rem;
+  letter-spacing: 0.22em;
+  font-family: 'Poppins', monospace, sans-serif;
+  margin-bottom: 2rem;
+  color: var(--text-main);
+}
+.credit-card__info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2.5rem;
+}
+.credit-card__label {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.credit-card__value {
+  display: block;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-top: 0.3rem;
+  letter-spacing: 0.06em;
+}
+@media (max-width: 900px) {
+  .credit-card {
+    max-width: 98vw;
+    padding: 2rem 1rem 1.2rem 1rem;
+    min-height: 180px;
+  }
+  .credit-card__chip {
+    width: 38px;
+    height: 24px;
+    top: 1rem;
+    left: 1rem;
+  }
+  .credit-card__content {
+    margin-top: 1.2rem;
+  }
+  .credit-card__bank {
+    font-size: 1.1rem;
+    margin-bottom: 1.1rem;
+  }
+  .credit-card__number {
+    font-size: 1.1rem;
+    margin-bottom: 1.1rem;
+  }
+  .credit-card__info-row {
+    flex-direction: column;
+    gap: 0.7rem;
+    align-items: flex-start;
+  }
+  .credit-card__label {
+    font-size: 0.9rem;
+  }
+  .credit-card__value {
+    font-size: 1.1rem;
+  }
 }
 
 /* ====== HAMBURGER MENU ====== */
@@ -627,8 +765,8 @@ table tr:hover {
   align-items: center;
   width: 48px;
   height: 48px;
-  background: var(--white);
-  border: 2px solid var(--gray-200);
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
   border-radius: var(--radius-md);
   cursor: pointer;
   margin-right: 1rem;
@@ -637,7 +775,7 @@ table tr:hover {
 }
 
 .hamburger-menu:hover {
-  background: var(--gray-50);
+  background: var(--card-bg);
   border-color: var(--primary-color);
 }
 
@@ -646,7 +784,7 @@ table tr:hover {
   width: 24px;
   height: 3px;
   margin: 3px 0;
-  background: var(--gray-700);
+  background: var(--text-secondary);
   border-radius: 2px;
   transition: 0.3s;
 }
@@ -706,8 +844,10 @@ table tr:hover {
   }
 
   .login-container {
-    padding: 2rem 1.5rem;
+    padding: 2.5rem 1.5rem;
     margin: 2vh auto;
+    max-width: 98vw;
+    font-size: 1rem;
   }
 
   .saldo {
@@ -744,16 +884,17 @@ table tr:hover {
   }
 
   .login-container {
-    padding: 1.5rem 1rem;
-    max-width: 95vw;
+    padding: 1.5rem 0.5rem;
+    max-width: 99vw;
+    font-size: 0.97rem;
   }
 }
 
 /* ====== PRINT STYLES ====== */
 @media print {
   * {
-    background: var(--white) !important;
-    color: var(--gray-900) !important;
+    background: var(--text-main) !important;
+    color: var(--text-main) !important;
     box-shadow: none !important;
   }
 
@@ -769,17 +910,17 @@ table tr:hover {
   }
 
   .card {
-    border: 1px solid var(--gray-300) !important;
+    border: 1px solid var(--border-color) !important;
     page-break-inside: avoid;
   }
 
   table {
-    border: 1px solid var(--gray-300) !important;
+    border: 1px solid var(--border-color) !important;
   }
 
   table th,
   table td {
-    border: 1px solid var(--gray-300) !important;
+    border: 1px solid var(--border-color) !important;
   }
 }
 
@@ -809,7 +950,7 @@ a:focus {
   display: inline-block;
   width: 20px;
   height: 20px;
-  border: 3px solid var(--gray-300);
+  border: 3px solid var(--border-color);
   border-radius: 50%;
   border-top-color: var(--primary-color);
   animation: spin 1s ease-in-out infinite;
@@ -827,14 +968,621 @@ a:focus {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--gray-100);
+  background: var(--primary-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gray-400);
+  background: var(--border-color);
   border-radius: var(--radius-md);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gray-500);
+  background: var(--primary-color);
+}
+
+/* === VISA LOGO Y FECHA DE VENCIMIENTO === */
+.credit-card__logo {
+  position: absolute;
+  top: 1.5rem;
+  right: 2.2rem;
+  width: 60px;
+  height: 32px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.credit-card__logo img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.credit-card__info-row > div:last-child {
+  min-width: 80px;
+}
+
+/* === ANIMACIÓN DE BRILLO === */
+.credit-card {
+  position: relative;
+  overflow: hidden;
+  animation: fadeInCard 0.8s cubic-bezier(.4,1.4,.6,1) both;
+}
+.credit-card::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 120%;
+  height: 120%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.18) 60%, transparent 100%);
+  transform: skewX(-20deg) translateX(-100%);
+  transition: transform 0.7s cubic-bezier(.4,1.4,.6,1);
+  pointer-events: none;
+}
+.credit-card:hover::after {
+  transform: skewX(-20deg) translateX(100%);
+}
+@keyframes fadeInCard {
+  from { opacity: 0; transform: translateY(40px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+/* === BOTÓN OJO Y COPIAR === */
+.credit-card__eye-btn, .credit-card__copy-btn {
+  background: none;
+  border: none;
+  color: var(--text-main);
+  font-size: 1.2rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: color 0.2s;
+  outline: none;
+}
+.credit-card__eye-btn:focus, .credit-card__copy-btn:focus {
+  color: var(--primary-color);
+  outline: 2px solid var(--primary-color);
+}
+.credit-card__copy-btn.copied {
+  color: var(--success-color);
+  animation: copiedPop 0.5s;
+}
+@keyframes copiedPop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* === SELECTOR DE COLOR === */
+.credit-card__color-selector {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 1.2rem;
+  align-items: center;
+}
+.color-option {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2.5px solid transparent;
+  cursor: pointer;
+  transition: border 0.2s, box-shadow 0.2s;
+  outline: none;
+  display: inline-block;
+}
+.color-option.selected, .color-option:focus {
+  border: 2.5px solid var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0,182,255,0.18);
+}
+
+/* === ÚLTIMOS MOVIMIENTOS Y ESTADO === */
+.credit-card__extras {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  max-width: 650px;
+}
+.credit-card__status-row {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  font-size: 1.1rem;
+  margin-bottom: 0.7rem;
+}
+.credit-card__status-label {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+.credit-card__status-value {
+  color: var(--success-color);
+  font-weight: 700;
+}
+.credit-card__movements-title {
+  font-size: 1.08rem;
+  color: var(--primary-color);
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+.credit-card__movements-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.credit-card__movements-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.2rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 1.02rem;
+  color: var(--text-main);
+}
+.credit-card__movements-list li:last-child {
+  border-bottom: none;
+}
+.credit-card__movements-date {
+  color: var(--text-secondary);
+  font-size: 0.97rem;
+  margin-right: 0.7rem;
+}
+.credit-card__movements-type {
+  font-weight: 600;
+  margin-right: 0.7rem;
+}
+.credit-card__movements-value {
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+/* === ACCESIBILIDAD Y USABILIDAD === */
+.credit-card__color-selector .color-option:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+.credit-card__eye-btn:focus, .credit-card__copy-btn:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* === RESUMEN DE TRANSACCIONES === */
+.transactions-summary {
+  display: flex;
+  gap: 2.5rem;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 1.2rem 2rem;
+}
+.transactions-summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 120px;
+}
+.transactions-summary-label {
+  color: var(--text-secondary);
+  font-size: 0.98rem;
+  margin-bottom: 0.2rem;
+}
+.transactions-summary-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.transactions-summary-value.ingresos {
+  color: var(--success-color);
+}
+.transactions-summary-value.egresos {
+  color: var(--danger-color);
+}
+
+/* === FILTROS DE TRANSACCIONES === */
+/* Ajuste: elimina estilos para input[type="text"] en .transactions-filters y ajusta el gap */
+.transactions-filters {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 1rem 1.5rem;
+  flex-wrap: wrap;
+}
+.transactions-filters select,
+.transactions-filters input[type="month"] {
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-color);
+  background: var(--primary-bg);
+  color: var(--text-main);
+  font-size: 1rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  min-width: 180px;
+  transition: border 0.2s;
+}
+.transactions-filters select:focus,
+.transactions-filters input[type="month"]:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+/* === TIMELINE DE TRANSACCIONES === */
+.transactions-timeline {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.transaction-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.1rem;
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 1.1rem 1.5rem;
+  position: relative;
+  animation: fadeInCard 0.7s cubic-bezier(.4,1.4,.6,1);
+  border-left: 5px solid var(--primary-color);
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.transaction-item.ingreso {
+  border-left: 5px solid var(--success-color);
+}
+.transaction-item.egreso {
+  border-left: 5px solid var(--danger-color);
+}
+.transaction-icon {
+  font-size: 1.7rem;
+  margin-top: 0.1rem;
+  flex-shrink: 0;
+}
+.transaction-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.transaction-title {
+  font-weight: 700;
+  font-size: 1.08rem;
+  color: var(--text-main);
+}
+.transaction-desc {
+  color: var(--text-secondary);
+  font-size: 0.97rem;
+}
+.transaction-meta {
+  display: flex;
+  gap: 1.2rem;
+  font-size: 0.97rem;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+.transaction-value {
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-left: 1.2rem;
+  align-self: flex-end;
+}
+.transaction-value.ingreso {
+  color: var(--success-color);
+}
+.transaction-value.egreso {
+  color: var(--danger-color);
+}
+@media (max-width: 700px) {
+  .transactions-summary, .transactions-filters {
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 1rem 0.7rem;
+  }
+  .transactions-summary-item {
+    min-width: 0;
+    width: 100%;
+    align-items: flex-start;
+  }
+  .transaction-item {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem 0.7rem;
+  }
+  .transaction-value {
+    margin-left: 0;
+    align-self: flex-start;
+  }
+}
+
+/* === PANEL DE CONSIGNACIÓN === */
+.deposit-panel {
+  position: relative;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+  min-width: 320px;
+  max-width: 480px;
+  margin: 0 0 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.deposit-icon {
+  font-size: 3.2rem;
+  color: var(--primary-color);
+  margin-bottom: 1.2rem;
+  text-shadow: 0 2px 12px rgba(0,182,255,0.13);
+}
+
+/* === LOADER ANIMADO === */
+.deposit-loader {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border: 4px solid var(--border-color);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: spin 1s linear infinite;
+  margin: 1.2rem auto;
+}
+
+/* === MENSAJES ANIMADOS === */
+#depositMsg, #depositError {
+  animation: fadeInCard 0.6s;
+  margin-top: 1rem;
+}
+
+/* === RESUMEN DE CONSIGNACIÓN IGUAL AL DE RETIRO === */
+.deposit-summary {
+  background: linear-gradient(120deg, #232325 60%, #232325 80%, #222 100%);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 32px rgba(0,182,255,0.10);
+  padding: 2.2rem 2rem 2rem 2rem;
+  margin-top: 1.5rem;
+  max-width: 600px;
+  margin-left: 0.5rem;
+  border: 2.5px solid var(--primary-color);
+  animation: fadeInCard 0.7s cubic-bezier(.4,1.4,.6,1);
+  position: relative;
+}
+.deposit-summary h3 {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: left;
+  margin-bottom: 2rem;
+  letter-spacing: 0.04em;
+}
+.deposit-summary p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #232325;
+  color: var(--text-main);
+  font-size: 1.08rem;
+  border-radius: var(--radius-md);
+  padding: 0.7rem 1.2rem;
+  margin: 0.5rem 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  border: 1.5px solid #292929;
+}
+.deposit-summary p:last-child {
+  margin-bottom: 1.5rem;
+}
+.deposit-summary strong {
+  color: var(--text-secondary);
+  font-weight: 600;
+  min-width: 120px;
+}
+#depositValue, #depositSaldo {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  letter-spacing: 0.04em;
+}
+.deposit-summary .form-btn-row {
+  justify-content: center;
+  margin-top: 1.2rem;
+  gap: 1rem;
+}
+.deposit-summary button {
+  width: 100%;
+  margin-top: 0.5rem;
+  background: linear-gradient(90deg, var(--primary-color) 60%, var(--secondary-color) 100%);
+  color: var(--text-main);
+  font-size: 1.08rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: none;
+  padding: 0.9rem 0;
+  box-shadow: var(--shadow-md);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.04em;
+}
+.deposit-summary button:hover {
+  background: linear-gradient(90deg, var(--secondary-color) 60%, var(--primary-color) 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0,182,255,0.13);
+}
+@media (max-width: 700px) {
+  .deposit-summary {
+    padding: 1.2rem 0.5rem;
+    max-width: 99vw;
+    margin-left: 0;
+  }
+  .deposit-summary h3 {
+    font-size: 1.15rem;
+    margin-bottom: 1.1rem;
+  }
+  .deposit-summary p {
+    font-size: 0.98rem;
+    padding: 0.5rem 0.7rem;
+  }
+  #depositValue, #depositSaldo {
+    font-size: 1.08rem;
+  }
+}
+
+/* === RESUMEN DE RETIRO MODERNO === */
+#withdrawSummary {
+  background: linear-gradient(120deg, #232325 60%, #232325 80%, #222 100%);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 32px rgba(0,182,255,0.10);
+  padding: 2.2rem 2rem 2rem 2rem;
+  margin-top: 1.5rem;
+  max-width: 600px;
+  margin-left: 0.5rem;
+  border: 2.5px solid var(--primary-color);
+  animation: fadeInCard 0.7s cubic-bezier(.4,1.4,.6,1);
+  position: relative;
+}
+#withdrawSummary h3 {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: left;
+  margin-bottom: 2rem;
+  letter-spacing: 0.04em;
+}
+#withdrawSummary p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #232325;
+  color: var(--text-main);
+  font-size: 1.08rem;
+  border-radius: var(--radius-md);
+  padding: 0.7rem 1.2rem;
+  margin: 0.5rem 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  border: 1.5px solid #292929;
+}
+#withdrawSummary p:last-child {
+  margin-bottom: 1.5rem;
+}
+#withdrawSummary strong {
+  color: var(--text-secondary);
+  font-weight: 600;
+  min-width: 120px;
+}
+#withdrawValue {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  letter-spacing: 0.04em;
+}
+#withdrawSummary button {
+  width: 100%;
+  margin-top: 1.2rem;
+  background: linear-gradient(90deg, var(--primary-color) 60%, var(--secondary-color) 100%);
+  color: var(--text-main);
+  font-size: 1.08rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: none;
+  padding: 0.9rem 0;
+  box-shadow: var(--shadow-md);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.04em;
+}
+#withdrawSummary button:hover {
+  background: linear-gradient(90deg, var(--secondary-color) 60%, var(--primary-color) 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0,182,255,0.13);
+}
+@media (max-width: 700px) {
+  #withdrawSummary {
+    padding: 1.2rem 0.5rem;
+    max-width: 99vw;
+    margin-left: 0;
+  }
+  #withdrawSummary h3 {
+    font-size: 1.15rem;
+    margin-bottom: 1.1rem;
+  }
+  #withdrawSummary p {
+    font-size: 0.98rem;
+    padding: 0.5rem 0.7rem;
+  }
+  #withdrawValue {
+    font-size: 1.08rem;
+  }
+}
+
+/* =========================
+   CERTIFICADO BANCARIO
+   ========================= */
+#certificateContent {
+  background: #232325;
+  border: 2.5px solid var(--primary-color);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: 2.5rem 2rem 2rem 2rem;
+  margin: 2.5rem auto 0 auto;
+  max-width: 600px;
+  color: var(--text-main);
+  font-size: 1.13rem;
+  position: relative;
+  animation: fadeInCard 0.7s cubic-bezier(.4,1.4,.6,1);
+  text-align: center;
+}
+#certificateContent h2 {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  letter-spacing: 0.04em;
+}
+#certificateContent p {
+  margin: 1.1rem 0;
+  color: var(--text-main);
+  font-size: 1.13rem;
+  background: #232325;
+  border-radius: var(--radius-md);
+  padding: 0.7rem 1.2rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  border: 1.5px solid #292929;
+  display: block;
+}
+#certificateContent strong {
+  color: var(--secondary-color);
+  font-weight: 700;
+}
+#certificateContent button {
+  width: 100%;
+  margin-top: 1.5rem;
+  background: var(--primary-color);
+  color: var(--text-main);
+  font-size: 1.08rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: none;
+  padding: 0.9rem 0;
+  box-shadow: var(--shadow-md);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+#certificateContent button:hover {
+  background: var(--secondary-color);
+  color: #232325;
+  box-shadow: 0 4px 16px rgba(0,182,255,0.13);
+}
+@media (max-width: 700px) {
+  #certificateContent {
+    padding: 1.2rem 0.5rem;
+    max-width: 99vw;
+  }
+  #certificateContent h2 {
+    font-size: 1.15rem;
+    margin-bottom: 1.1rem;
+  }
+  #certificateContent p {
+    font-size: 0.98rem;
+    padding: 0.5rem 0.7rem;
+  }
 }

@@ -43,6 +43,67 @@ function mostrarNotificacion(mensaje) {
 }
 
 /**
+ * Función específica para cargar datos del certificado
+ */
+function cargarDatosCertificado() {
+  console.log('=== CARGANDO DATOS DEL CERTIFICADO ===');
+  console.log('Usuario activo:', usuarioActivo);
+  
+  if (!usuarioActivo) {
+    console.error('No hay usuario activo');
+    return;
+  }
+  
+  // Extraer nombre completo
+  const nombre = usuarioActivo.firstName && usuarioActivo.lastName
+    ? `${usuarioActivo.firstName} ${usuarioActivo.lastName}`
+    : (usuarioActivo.nombre || usuarioActivo.name || 'Usuario');
+  
+  // Extraer número de cuenta
+  const numeroCuenta = usuarioActivo.accountNumber || usuarioActivo.cuenta || 'No disponible';
+  
+  // Extraer fecha de creación
+  const fechaCreacion = usuarioActivo.createdAt || usuarioActivo.creado || 'No disponible';
+  
+  // Extraer ciudad
+  const ciudad = usuarioActivo.city || usuarioActivo.ciudad || 'No disponible';
+  
+  // Fecha actual
+  const hoy = new Date();
+  const fechaActual = `${hoy.getDate()}/${hoy.getMonth()+1}/${hoy.getFullYear()}`;
+  
+  console.log('Datos extraídos:', {
+    nombre,
+    numeroCuenta,
+    fechaCreacion,
+    ciudad,
+    fechaActual
+  });
+  
+  // Asignar datos a los elementos del certificado
+  const elementos = {
+    'certificateFullName': nombre,
+    'certificateAccountNumber': numeroCuenta,
+    'certificateCreatedAt': fechaCreacion,
+    'certificateCity': ciudad,
+    'certificateDate': fechaActual
+  };
+  
+  // Asignar cada dato y verificar
+  Object.entries(elementos).forEach(([id, valor]) => {
+    const elemento = document.getElementById(id);
+    if (elemento) {
+      elemento.textContent = valor;
+      console.log(`✅ ${id}: "${valor}"`);
+    } else {
+      console.error(`❌ Elemento no encontrado: ${id}`);
+    }
+  });
+  
+  console.log('=== FIN CARGANDO CERTIFICADO ===');
+}
+
+/**
  * Muestra la sección seleccionada del dashboard y oculta los resúmenes de transacción si no corresponde.
  * @param {string} id - ID de la sección a mostrar.
  */
@@ -53,6 +114,14 @@ function mostrarSeccionDashboard(id) {
   if (id !== 'deposit') document.getElementById('depositSummary').style.display = 'none';
   if (id !== 'withdraw') document.getElementById('withdrawSummary').style.display = 'none';
   if (id !== 'services') document.getElementById('servicesSummary').style.display = 'none';
+
+  // Siempre actualizar datos del usuario al cambiar de sección
+  mostrarDatosUsuario();
+
+  // Si se muestra el certificado, cargar datos específicos
+  if (id === 'certificate') {
+    setTimeout(() => cargarDatosCertificado(), 100);
+  }
 }
 
 // Mejorar accesibilidad en la manipulación del DOM
@@ -90,31 +159,53 @@ botonesImprimir.forEach(btn => {
  * Muestra los datos del usuario activo en las diferentes secciones del dashboard.
  */
 function mostrarDatosUsuario() {
+  console.log('=== DEBUG: Datos del usuario activo ===');
+  console.log('Usuario activo:', usuarioActivo);
+  
   // Bienvenida y resumen
-  const nombre = usuarioActivo.firstName ? `${usuarioActivo.firstName} ${usuarioActivo.lastName}` : (usuarioActivo.nombre || 'Usuario');
+  const nombre = usuarioActivo.firstName && usuarioActivo.lastName
+    ? `${usuarioActivo.firstName} ${usuarioActivo.lastName}`
+    : (usuarioActivo.nombre || usuarioActivo.name || 'Usuario');
+  console.log('Nombre extraído:', nombre);
+  
   document.getElementById('welcomeUser').textContent = `Bienvenido, ${nombre}`;
-  document.getElementById('accountNumber').textContent = usuarioActivo.accountNumber || usuarioActivo.cuenta || '';
-  document.getElementById('createdAt').textContent = usuarioActivo.createdAt || usuarioActivo.creado || '';
+  document.getElementById('accountNumber').textContent = usuarioActivo.accountNumber || usuarioActivo.cuenta || 'No disponible';
+  document.getElementById('createdAt').textContent = usuarioActivo.createdAt || usuarioActivo.creado || 'No disponible';
   document.getElementById('balance').textContent = (usuarioActivo.balance !== undefined ? usuarioActivo.balance : 0).toLocaleString('es-CO');
   // Consignar
-  document.getElementById('depositAccountNumber').textContent = usuarioActivo.accountNumber || usuarioActivo.cuenta || '';
+  document.getElementById('depositAccountNumber').textContent = usuarioActivo.accountNumber || usuarioActivo.cuenta || 'No disponible';
   document.getElementById('depositFullName').textContent = nombre;
   // Retirar
-  document.getElementById('withdrawAccountNumber').textContent = usuarioActivo.accountNumber || usuarioActivo.cuenta || '';
+  document.getElementById('withdrawAccountNumber').textContent = usuarioActivo.accountNumber || usuarioActivo.cuenta || 'No disponible';
   document.getElementById('withdrawFullName').textContent = nombre;
   // Servicios
-  document.getElementById('servicesAccountNumber').textContent = usuarioActivo.accountNumber || usuarioActivo.cuenta || '';
+  document.getElementById('servicesAccountNumber').textContent = usuarioActivo.accountNumber || usuarioActivo.cuenta || 'No disponible';
   document.getElementById('servicesFullName').textContent = nombre;
   // Extracto
-  document.getElementById('statementAccountNumber').textContent = usuarioActivo.accountNumber || usuarioActivo.cuenta || '';
+  document.getElementById('statementAccountNumber').textContent = usuarioActivo.accountNumber || usuarioActivo.cuenta || 'No disponible';
   document.getElementById('statementFullName').textContent = nombre;
   // Certificado
-  document.getElementById('certificateFullName').textContent = nombre;
-  document.getElementById('certificateAccountNumber').textContent = usuarioActivo.accountNumber || usuarioActivo.cuenta || '';
-  document.getElementById('certificateCreatedAt').textContent = usuarioActivo.createdAt || usuarioActivo.creado || '';
-  document.getElementById('certificateCity').textContent = usuarioActivo.city || usuarioActivo.ciudad || '';
-  const hoy = new Date();
-  document.getElementById('certificateDate').textContent = `${hoy.getDate()}/${hoy.getMonth()+1}/${hoy.getFullYear()}`;
+  const certificateFullName = document.getElementById('certificateFullName');
+  const certificateAccountNumber = document.getElementById('certificateAccountNumber');
+  const certificateCreatedAt = document.getElementById('certificateCreatedAt');
+  const certificateCity = document.getElementById('certificateCity');
+  const certificateDate = document.getElementById('certificateDate');
+  
+  if (certificateFullName) certificateFullName.textContent = nombre;
+  if (certificateAccountNumber) certificateAccountNumber.textContent = usuarioActivo.accountNumber || usuarioActivo.cuenta || 'No disponible';
+  if (certificateCreatedAt) certificateCreatedAt.textContent = usuarioActivo.createdAt || usuarioActivo.creado || 'No disponible';
+  if (certificateCity) certificateCity.textContent = usuarioActivo.city || usuarioActivo.ciudad || 'No disponible';
+  if (certificateDate) {
+    const hoy = new Date();
+    certificateDate.textContent = `${hoy.getDate()}/${hoy.getMonth()+1}/${hoy.getFullYear()}`;
+  }
+  
+  console.log('=== Datos del certificado ===');
+  console.log('Nombre:', nombre);
+  console.log('Cuenta:', usuarioActivo.accountNumber || usuarioActivo.cuenta || 'No disponible');
+  console.log('Fecha creación:', usuarioActivo.createdAt || usuarioActivo.creado || 'No disponible');
+  console.log('Ciudad:', usuarioActivo.city || usuarioActivo.ciudad || 'No disponible');
+  console.log('=== FIN DEBUG ===');
 }
 
 /**
@@ -151,7 +242,7 @@ formularioConsignacion.addEventListener('submit', function(e) {
   document.getElementById('depositDate').textContent = fecha + ' ' + hora;
   document.getElementById('depositRef').textContent = ref;
   document.getElementById('depositValue').textContent = monto.toLocaleString('es-CO');
-  mostrarDatosUsuario();
+  mostrarDatosUsuario(); // Actualiza en tiempo real
   mostrarTransaccionesUsuario();
 });
 
@@ -182,7 +273,7 @@ formularioRetiro.addEventListener('submit', function(e) {
   document.getElementById('withdrawDate').textContent = fecha + ' ' + hora;
   document.getElementById('withdrawRef').textContent = ref;
   document.getElementById('withdrawValue').textContent = monto.toLocaleString('es-CO');
-  mostrarDatosUsuario();
+  mostrarDatosUsuario(); // Actualiza en tiempo real
   mostrarTransaccionesUsuario();
 });
 
@@ -216,7 +307,7 @@ formularioPagoServicios.addEventListener('submit', function(e) {
   document.getElementById('servicesRefSummary').textContent = refGen;
   document.getElementById('servicesTypeSummary').textContent = tipo;
   document.getElementById('servicesValueSummary').textContent = valor.toLocaleString('es-CO');
-  mostrarDatosUsuario();
+  mostrarDatosUsuario(); // Actualiza en tiempo real
   mostrarTransaccionesUsuario();
 });
 
@@ -278,7 +369,111 @@ window.onload = function() {
   mostrarDatosUsuario();
   mostrarTransaccionesUsuario();
   mostrarSeccionDashboard('overview');
-};
+  
+  // Agregar botón de debug al certificado
+  setTimeout(() => {
+    const certificateSection = document.getElementById('certificate');
+    if (certificateSection) {
+      const debugBtn = document.createElement('button');
+      debugBtn.textContent = '🔧 Debug Certificado';
+      debugBtn.style.cssText = 'background: #ff6b6b; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; margin: 1rem 0; cursor: pointer;';
+      debugBtn.onclick = cargarDatosCertificado;
+      certificateSection.insertBefore(debugBtn, certificateSection.firstChild);
+    }
+  }, 1000);
+}
+
+// --- ACTUALIZAR TARJETA DE CRÉDITO EN DASHBOARD (MEJORADA) ---
+function actualizarTarjetaCreditoDashboard(usuario) {
+  if (!usuario) return;
+  // Formatear número de cuenta tipo tarjeta (últimos 4 dígitos)
+  let cuenta = usuario.accountNumber || '';
+  let ultimos = cuenta.slice(-4);
+  let cardNumber = '•••• •••• •••• ' + ultimos;
+  document.getElementById('cardAccountNumber').textContent = cardNumber;
+  document.getElementById('cardFullName').textContent = usuario.firstName + ' ' + usuario.lastName;
+
+  // Saldo (oculto/visible)
+  const saldoSpan = document.getElementById('cardBalance');
+  const eyeIcon = document.getElementById('eyeIcon');
+  let mostrarSaldo = localStorage.getItem('mostrarSaldo') !== 'false';
+  saldoSpan.textContent = mostrarSaldo ? ('$' + (usuario.balance || 0).toLocaleString('es-CO', {minimumFractionDigits:2})) : '••••••';
+  eyeIcon.textContent = mostrarSaldo ? '👁️' : '🙈';
+
+  // Fecha de vencimiento
+  document.getElementById('cardExpiry').textContent = usuario.expiry || '--/--';
+
+  // Estado de la cuenta
+  document.getElementById('cardStatus').textContent = usuario.status || 'Activa';
+
+  // Color de tarjeta
+  const cardDiv = document.getElementById('creditCard');
+  const color = usuario.cardColor || '#00b6ff';
+  cardDiv.style.background = `linear-gradient(135deg, #232325 60%, ${color} 100%)`;
+  // Selector de color
+  document.querySelectorAll('.color-option').forEach(opt => {
+    if (opt.dataset.color === color) {
+      opt.classList.add('selected');
+    } else {
+      opt.classList.remove('selected');
+    }
+  });
+
+  // Últimos 3 movimientos
+  const movimientos = JSON.parse(localStorage.getItem(`movimientos_${usuario.accountNumber}`)) || [];
+  const ultimosMovs = movimientos.slice(-3).reverse();
+  const movList = document.getElementById('lastMovementsList');
+  movList.innerHTML = '';
+  if (ultimosMovs.length === 0) {
+    movList.innerHTML = '<li>No hay movimientos recientes.</li>';
+  } else {
+    ultimosMovs.forEach(mov => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span class='credit-card__movements-date'>${mov.fecha || ''}</span><span class='credit-card__movements-type'>${mov.tipo || ''}</span><span class='credit-card__movements-value'>${mov.valor ? (mov.valor < 0 ? '-$' : '+$') + Math.abs(mov.valor).toLocaleString('es-CO') : ''}</span>`;
+      movList.appendChild(li);
+    });
+  }
+}
+
+// --- EVENTOS DE INTERACCIÓN TARJETA ---
+window.addEventListener('DOMContentLoaded', function() {
+  let usuario = JSON.parse(localStorage.getItem('activeUser'));
+  actualizarTarjetaCreditoDashboard(usuario);
+
+  // Alternar visibilidad de saldo
+  document.getElementById('toggleBalanceBtn').onclick = function() {
+    let mostrar = localStorage.getItem('mostrarSaldo') !== 'false';
+    localStorage.setItem('mostrarSaldo', (!mostrar).toString());
+    actualizarTarjetaCreditoDashboard(usuario);
+  };
+
+  // Selector de color
+  document.querySelectorAll('.color-option').forEach(opt => {
+    opt.onclick = function() {
+      usuario.cardColor = this.dataset.color;
+      localStorage.setItem('activeUser', JSON.stringify(usuario));
+      // Actualizar en lista de usuarios
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      users = users.map(u => u.accountNumber === usuario.accountNumber ? {...u, cardColor: usuario.cardColor} : u);
+      localStorage.setItem('users', JSON.stringify(users));
+      actualizarTarjetaCreditoDashboard(usuario);
+    };
+    opt.onkeydown = function(e) {
+      if (e.key === 'Enter' || e.key === ' ') this.click();
+    };
+  });
+
+  // Copiar número de cuenta
+  document.getElementById('copyAccountBtn').onclick = function() {
+    navigator.clipboard.writeText(usuario.accountNumber);
+    this.classList.add('copied');
+    this.title = '¡Copiado!';
+    setTimeout(() => {
+      this.classList.remove('copied');
+      this.title = 'Copiar número de cuenta';
+    }, 1200);
+  };
+});
 
 // Cerrar sesión (demo)
 function logout() {
@@ -317,3 +512,200 @@ window.addEventListener('DOMContentLoaded', function() {
   }
 });
   
+// --- TRANSACCIONES: RESUMEN, FILTRO Y TIMELINE ---
+function renderTransaccionesDashboard(usuario) {
+  if (!usuario) return;
+  const movimientos = JSON.parse(localStorage.getItem(`movimientos_${usuario.accountNumber}`)) || [];
+  // Filtros
+  const texto = (document.getElementById('transBuscar')?.value || '').toLowerCase();
+  const tipo = document.getElementById('transTipoFiltro')?.value || '';
+  const fechaFiltro = document.getElementById('transFechaFiltro')?.value;
+
+  let filtrados = movimientos.filter(mov => {
+    let ok = true;
+    if (texto) {
+      ok = (mov.referencia || '').toLowerCase().includes(texto) || (mov.desc || '').toLowerCase().includes(texto);
+    }
+    if (ok && tipo) {
+      ok = (mov.tipo || '').toLowerCase() === tipo.toLowerCase();
+    }
+    if (ok && fechaFiltro) {
+      ok = (mov.fecha || '').startsWith(fechaFiltro);
+    }
+    return ok;
+  });
+  // Ordenar descendente
+  filtrados = filtrados.sort((a,b) => (b.fecha || '').localeCompare(a.fecha || ''));
+
+  // Resumen
+  let saldo = usuario.balance || 0;
+  let ingresos = movimientos.filter(m => m.valor > 0).reduce((a,b) => a + b.valor, 0);
+  let egresos = movimientos.filter(m => m.valor < 0).reduce((a,b) => a + b.valor, 0);
+  document.getElementById('transSaldo').textContent = '$' + saldo.toLocaleString('es-CO', {minimumFractionDigits:2});
+  document.getElementById('transIngresos').textContent = '$' + ingresos.toLocaleString('es-CO', {minimumFractionDigits:2});
+  document.getElementById('transEgresos').textContent = '$' + Math.abs(egresos).toLocaleString('es-CO', {minimumFractionDigits:2});
+
+  // Timeline
+  const timeline = document.getElementById('transactionsTimeline');
+  timeline.innerHTML = '';
+  if (filtrados.length === 0) {
+    timeline.innerHTML = '<li class="transaction-item">No hay transacciones para mostrar.</li>';
+    return;
+  }
+  filtrados.forEach(mov => {
+    const li = document.createElement('li');
+    let icon = '💸';
+    let clase = '';
+    if (mov.tipo === 'Consignación') { icon = '💰'; clase = 'ingreso'; }
+    else if (mov.tipo === 'Retiro') { icon = '💸'; clase = 'egreso'; }
+    else if (mov.tipo === 'Pago' || mov.tipo === 'Pago Servicio') { icon = '🧾'; clase = 'egreso'; }
+    else if (mov.valor > 0) { clase = 'ingreso'; }
+    else if (mov.valor < 0) { clase = 'egreso'; }
+    li.className = `transaction-item ${clase}`;
+    li.innerHTML = `
+      <span class="transaction-icon" aria-hidden="true">${icon}</span>
+      <div class="transaction-details">
+        <span class="transaction-title">${mov.tipo || 'Transacción'}</span>
+        <span class="transaction-desc">${mov.desc || ''}</span>
+        <div class="transaction-meta">
+          <span>${mov.fecha || ''}</span>
+          <span>Ref: ${mov.referencia || ''}</span>
+        </div>
+      </div>
+      <span class="transaction-value ${clase}">${mov.valor ? (mov.valor < 0 ? '-$' : '+$') + Math.abs(mov.valor).toLocaleString('es-CO') : ''}</span>
+    `;
+    timeline.appendChild(li);
+  });
+}
+
+// --- EVENTOS DE FILTRO Y ACTUALIZACIÓN EN TIEMPO REAL ---
+window.addEventListener('DOMContentLoaded', function() {
+  let usuario = JSON.parse(localStorage.getItem('activeUser'));
+  if (document.getElementById('transactionsTimeline')) {
+    renderTransaccionesDashboard(usuario);
+    ['transBuscar','transTipoFiltro','transFechaFiltro'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', () => renderTransaccionesDashboard(usuario));
+      if (el && el.tagName === 'SELECT') el.addEventListener('change', () => renderTransaccionesDashboard(usuario));
+    });
+  }
+});
+  
+// --- CONSIGNACIÓN MEJORADA ---
+window.addEventListener('DOMContentLoaded', function() {
+  const depositForm = document.getElementById('depositForm');
+  if (depositForm) {
+    const depositAmount = document.getElementById('depositAmount');
+    const depositMsg = document.getElementById('depositMsg');
+    const depositError = document.getElementById('depositError');
+    const depositLoader = document.getElementById('depositLoader');
+    const depositSummary = document.getElementById('depositSummary');
+    const depositCopyBtn = document.getElementById('depositCopyBtn');
+    const depositClearBtn = document.getElementById('depositClearBtn');
+    // Validación en tiempo real
+    depositAmount.addEventListener('input', function() {
+      if (isNaN(this.value) || Number(this.value) <= 0) {
+        depositError.textContent = 'Ingrese un monto válido.';
+        depositError.style.display = 'block';
+        depositMsg.style.display = 'none';
+      } else {
+        depositError.style.display = 'none';
+      }
+    });
+    // Limpiar formulario
+    depositClearBtn.onclick = function() {
+      depositForm.reset();
+      depositMsg.style.display = 'none';
+      depositError.style.display = 'none';
+      depositSummary.style.display = 'none';
+      depositLoader.style.display = 'none';
+      depositAmount.focus();
+    };
+    // Copiar resumen
+          if (depositCopyBtn) {
+        depositCopyBtn.onclick = function() {
+          const resumen = `Consignación Exitosa\nFecha: ${document.getElementById('depositDate').textContent}\nReferencia: ${document.getElementById('depositRef').textContent}\nMonto: ${document.getElementById('depositValue').textContent}\nSaldo actual: ${document.getElementById('depositSaldo').textContent}`;
+          navigator.clipboard.writeText(resumen);
+          depositCopyBtn.textContent = '¡Copiado!';
+          setTimeout(()=>{ depositCopyBtn.textContent = 'Copiar Resumen'; }, 1200);
+        };
+      }
+      // Enviar formulario
+      depositForm.onsubmit = function(e) {
+        e.preventDefault();
+        depositMsg.style.display = 'none';
+        depositError.style.display = 'none';
+        depositSummary.style.display = 'none';
+        depositLoader.style.display = 'block';
+        const amount = parseFloat(depositAmount.value);
+        if (isNaN(amount) || amount <= 0) {
+          depositLoader.style.display = 'none';
+          depositError.textContent = 'Ingrese un monto válido.';
+          depositError.style.display = 'block';
+          return;
+        }
+        // Simula proceso
+        setTimeout(() => {
+          try {
+            let user = JSON.parse(localStorage.getItem('activeUser'));
+            user.balance += amount;
+            if (document.getElementById('balance')) document.getElementById('balance').textContent = user.balance.toFixed(2);
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            users = users.map(u => (u.accountNumber === user.accountNumber ? user : u));
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('activeUser', JSON.stringify(user));
+            // Guardar movimiento
+            let movimientos = JSON.parse(localStorage.getItem(`movimientos_${user.accountNumber}`)) || [];
+            const now = new Date();
+            const fecha = now.toISOString().slice(0,10);
+            const hora = now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const ref = Math.random().toString(36).substring(2,8).toUpperCase();
+            movimientos.push({fecha, hora, ref, tipo:'Consignación', desc:'Consignación por canal electrónico', valor: amount, referencia: ref});
+            localStorage.setItem(`movimientos_${user.accountNumber}`, JSON.stringify(movimientos));
+            // Mostrar resumen visual
+            depositLoader.style.display = 'none';
+            depositSummary.style.display = 'block';
+            // Asignar valores SOLO si los elementos existen
+            const elFecha = document.getElementById('depositDate');
+            const elRef = document.getElementById('depositRef');
+            const elValue = document.getElementById('depositValue');
+            const elSaldo = document.getElementById('depositSaldo');
+            if (!elFecha || !elRef || !elValue || !elSaldo) {
+              console.error('Algún elemento del resumen es null:', {elFecha, elRef, elValue, elSaldo});
+              depositError.textContent = 'Error interno: elemento de resumen no encontrado.';
+              depositError.style.display = 'block';
+              depositSummary.style.display = 'none';
+              return;
+            }
+            elFecha.textContent = fecha + ' ' + hora;
+            elRef.textContent = ref;
+            elValue.textContent = '$' + amount.toLocaleString('es-CO');
+            elSaldo.textContent = '$' + user.balance.toLocaleString('es-CO');
+            // Leer valores antes de resetear
+            const resumen = `Consignación Exitosa\nFecha: ${elFecha.textContent}\nReferencia: ${elRef.textContent}\nMonto: ${elValue.textContent}\nSaldo actual: ${elSaldo.textContent}`;
+            depositForm.reset();
+            // Actualizar dashboard y transacciones
+            actualizarTarjetaCreditoDashboard(user);
+            renderTransaccionesDashboard(user);
+            // Asignar evento copiar resumen solo cuando el botón existe
+            setTimeout(() => {
+              const depositCopyBtn = document.getElementById('depositCopyBtn');
+              if (depositCopyBtn) {
+                depositCopyBtn.onclick = function() {
+                  navigator.clipboard.writeText(resumen);
+                  depositCopyBtn.textContent = '¡Copiado!';
+                  setTimeout(()=>{ depositCopyBtn.textContent = 'Copiar Resumen'; }, 1200);
+                };
+              } else {
+                console.warn('No se encontró el botón de copiar resumen');
+              }
+            }, 100);
+          } catch (err) {
+            depositLoader.style.display = 'none';
+            depositError.textContent = 'Ocurrió un error inesperado.';
+            depositError.style.display = 'block';
+          }
+        }, 1200);
+      };
+    }
+  });
