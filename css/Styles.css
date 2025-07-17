@@ -387,6 +387,15 @@ button[type="submit"]:active,
   margin-top: 1rem;
 }
 
+.form-btn-row button {
+  flex: 1 1 0;
+  min-width: 120px;
+  margin-right: 8px;
+}
+.form-btn-row button:last-child {
+  margin-right: 0;
+}
+
 @media (max-width: 480px) {
   .form-btn-row {
     flex-direction: column;

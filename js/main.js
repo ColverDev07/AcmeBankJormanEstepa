@@ -7,23 +7,6 @@ if (!usuarioActivo) {
 let movimientosUsuario = JSON.parse(localStorage.getItem(`movimientos_${usuarioActivo.accountNumber}`)) || [];
 
 /**
- * Actualiza los datos del usuario activo en LocalStorage y en la lista de usuarios registrados.
- */
-function actualizarUsuarioActivo() {
-  localStorage.setItem('activeUser', JSON.stringify(usuarioActivo));
-  let usuariosRegistrados = JSON.parse(localStorage.getItem('users')) || [];
-  usuariosRegistrados = usuariosRegistrados.map(u => u.accountNumber === usuarioActivo.accountNumber ? usuarioActivo : u);
-  localStorage.setItem('users', JSON.stringify(usuariosRegistrados));
-}
-
-/**
- * Guarda el historial de movimientos del usuario activo en LocalStorage.
- */
-function guardarMovimientosUsuario() {
-  localStorage.setItem(`movimientos_${usuarioActivo.accountNumber}` , JSON.stringify(movimientosUsuario));
-}
-
-/**
  * Muestra una notificación de éxito en la parte superior del dashboard.
  * @param {string} mensaje - Mensaje a mostrar.
  */
@@ -43,7 +26,8 @@ function mostrarNotificacion(mensaje) {
 }
 
 /**
- * Función específica para cargar datos del certificado
+ * Carga y muestra los datos del certificado bancario del usuario activo.
+ * Se usa en la sección de certificado.
  */
 function cargarDatosCertificado() {
   console.log('=== CARGANDO DATOS DEL CERTIFICADO ===');
@@ -124,8 +108,10 @@ function mostrarSeccionDashboard(id) {
   }
 }
 
-// Mejorar accesibilidad en la manipulación del DOM
-// Ejemplo: añadir aria-label a botones de impresión y roles a tablas
+/**
+ * Imprime una sección específica del dashboard (extracto, resumen, etc).
+ * @param {string} id - ID del contenedor a imprimir.
+ */
 function imprimirSeccion(id) {
   const printContent = document.getElementById(id).outerHTML;
   const win = window.open('', '', 'width=800,height=600');
@@ -157,6 +143,7 @@ botonesImprimir.forEach(btn => {
 
 /**
  * Muestra los datos del usuario activo en las diferentes secciones del dashboard.
+ * Actualiza nombre, saldo, número de cuenta, etc.
  */
 function mostrarDatosUsuario() {
   console.log('=== DEBUG: Datos del usuario activo ===');
@@ -210,6 +197,7 @@ function mostrarDatosUsuario() {
 
 /**
  * Muestra las últimas 10 transacciones del usuario activo en la tabla de transacciones.
+ * Se usa en la sección de transacciones del dashboard.
  */
 function mostrarTransaccionesUsuario() {
   const tbody = document.querySelector('#transactionsTable tbody');
@@ -221,60 +209,83 @@ function mostrarTransaccionesUsuario() {
   });
 }
 
-// Consignación
-const formularioConsignacion = document.getElementById('depositForm');
-formularioConsignacion.addEventListener('submit', function(e) {
-  e.preventDefault();
-  const monto = parseFloat(document.getElementById('depositAmount').value);
-  if (isNaN(monto) || monto <= 0) return;
-  const now = new Date();
-  const fecha = now.toISOString().slice(0,10);
-  const hora = now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  const ref = Math.random().toString(36).substring(2,8).toUpperCase();
-  movimientosUsuario.push({fecha, hora, ref, tipo:'Consignación', desc:'Consignación por canal electrónico', valor: monto});
-  usuarioActivo.balance += monto;
-  actualizarUsuarioActivo();
-  guardarMovimientosUsuario();
-  mostrarNotificacion('Consignación realizada con éxito.');
-  document.getElementById('depositMsg').style.display = 'none';
-  // Resumen
-  document.getElementById('depositSummary').style.display = 'block';
-  document.getElementById('depositDate').textContent = fecha + ' ' + hora;
-  document.getElementById('depositRef').textContent = ref;
-  document.getElementById('depositValue').textContent = monto.toLocaleString('es-CO');
-  mostrarDatosUsuario(); // Actualiza en tiempo real
-  mostrarTransaccionesUsuario();
-});
-
 // Retiro
 const formularioRetiro = document.getElementById('withdrawForm');
-formularioRetiro.addEventListener('submit', function(e) {
-  e.preventDefault();
-  const monto = parseFloat(document.getElementById('withdrawAmount').value);
-  if (isNaN(monto) || monto <= 0) return;
-  if (usuarioActivo.balance < monto) {
-    document.getElementById('withdrawMsg').style.display = 'block';
-    document.getElementById('withdrawMsg').textContent = 'Saldo insuficiente.';
-    setTimeout(()=>{document.getElementById('withdrawMsg').style.display='none';},2000);
-    return;
+// Elimino el antiguo submit de retiro (si existe)
+if (typeof formularioRetiro !== 'undefined' && formularioRetiro) {
+  formularioRetiro.removeEventListener('submit', formularioRetiro.onsubmit);
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  const withdrawForm = document.getElementById('withdrawForm');
+  if (withdrawForm) {
+    const withdrawAmount = document.getElementById('withdrawAmount');
+    const withdrawMsg = document.getElementById('withdrawMsg');
+    const withdrawSummary = document.getElementById('withdrawSummary');
+    /**
+     * Maneja el flujo de retiro de dinero:
+     * - Valida el monto
+     * - Actualiza el saldo y movimientos en localStorage
+     * - Muestra un resumen visual con saldo actual
+     * - Actualiza el dashboard y transacciones
+     */
+    withdrawForm.onsubmit = function(e) {
+      e.preventDefault();
+      withdrawMsg.style.display = 'none';
+      withdrawSummary.style.display = 'none';
+      const amount = parseFloat(withdrawAmount.value);
+      if (isNaN(amount) || amount <= 0) {
+        withdrawMsg.textContent = 'Ingrese un monto válido.';
+        withdrawMsg.style.display = 'block';
+        return;
+      }
+      let user = JSON.parse(localStorage.getItem('activeUser'));
+      if (user.balance < amount) {
+        withdrawMsg.textContent = 'Saldo insuficiente.';
+        withdrawMsg.style.display = 'block';
+        return;
+      }
+      // Simula proceso
+      setTimeout(() => {
+        try {
+          user.balance -= amount;
+          let users = JSON.parse(localStorage.getItem('users')) || [];
+          users = users.map(u => (u.accountNumber === user.accountNumber ? user : u));
+          localStorage.setItem('users', JSON.stringify(users));
+          localStorage.setItem('activeUser', JSON.stringify(user));
+          // Guardar movimiento
+          let movimientos = JSON.parse(localStorage.getItem(`movimientos_${user.accountNumber}`)) || [];
+          const now = new Date();
+          const fecha = now.toISOString().slice(0,10);
+          const hora = now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          const ref = Math.random().toString(36).substring(2,8).toUpperCase();
+          movimientos.push({fecha, hora, ref, tipo:'Retiro', desc:'Retiro de dinero', valor: -amount, referencia: ref});
+          localStorage.setItem(`movimientos_${user.accountNumber}`, JSON.stringify(movimientos));
+          // Mostrar resumen visual
+          withdrawSummary.style.display = 'block';
+          document.getElementById('withdrawDate').textContent = fecha + ' ' + hora;
+          document.getElementById('withdrawRef').textContent = ref;
+          document.getElementById('withdrawValue').textContent = amount.toLocaleString('es-CO');
+          // Mostrar saldo actual
+          let saldoEl = document.getElementById('withdrawSaldo');
+          if (!saldoEl) {
+            const p = document.createElement('p');
+            p.innerHTML = '<strong>Saldo actual:</strong> <span id="withdrawSaldo"></span>';
+            document.getElementById('withdrawSummary').appendChild(p);
+            saldoEl = document.getElementById('withdrawSaldo');
+          }
+          saldoEl.textContent = user.balance.toLocaleString('es-CO');
+          withdrawForm.reset();
+          // Actualizar dashboard y transacciones
+          actualizarTarjetaCreditoDashboard(user);
+          renderTransaccionesDashboard(user);
+        } catch (err) {
+          withdrawMsg.textContent = 'Ocurrió un error inesperado.';
+          withdrawMsg.style.display = 'block';
+        }
+      }, 1200);
+    };
   }
-  const now = new Date();
-  const fecha = now.toISOString().slice(0,10);
-  const hora = now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  const ref = Math.random().toString(36).substring(2,8).toUpperCase();
-  movimientosUsuario.push({fecha, hora, ref, tipo:'Retiro', desc:'Retiro de dinero', valor: -monto});
-  usuarioActivo.balance -= monto;
-  actualizarUsuarioActivo();
-  guardarMovimientosUsuario();
-  mostrarNotificacion('Retiro realizado con éxito.');
-  document.getElementById('withdrawMsg').style.display = 'none';
-  // Resumen
-  document.getElementById('withdrawSummary').style.display = 'block';
-  document.getElementById('withdrawDate').textContent = fecha + ' ' + hora;
-  document.getElementById('withdrawRef').textContent = ref;
-  document.getElementById('withdrawValue').textContent = monto.toLocaleString('es-CO');
-  mostrarDatosUsuario(); // Actualiza en tiempo real
-  mostrarTransaccionesUsuario();
 });
 
 // Pago de servicios
@@ -297,8 +308,7 @@ formularioPagoServicios.addEventListener('submit', function(e) {
   const refGen = Math.random().toString(36).substring(2,8).toUpperCase();
   movimientosUsuario.push({fecha, hora, ref: refGen, tipo:'Retiro', desc:`Pago de servicio público ${tipo}`, valor: -valor});
   usuarioActivo.balance -= valor;
-  actualizarUsuarioActivo();
-  guardarMovimientosUsuario();
+  // Elimino las llamadas a actualizarUsuarioActivo y guardarMovimientosUsuario
   mostrarNotificacion('Pago de servicio realizado con éxito.');
   document.getElementById('servicesMsg').style.display = 'none';
   // Resumen
@@ -383,7 +393,11 @@ window.onload = function() {
   }, 1000);
 }
 
-// --- ACTUALIZAR TARJETA DE CRÉDITO EN DASHBOARD (MEJORADA) ---
+/**
+ * Actualiza la tarjeta de crédito en el dashboard con los datos del usuario.
+ * Incluye saldo, nombre, color, últimos movimientos, etc.
+ * @param {object} usuario - Objeto usuario a mostrar.
+ */
 function actualizarTarjetaCreditoDashboard(usuario) {
   if (!usuario) return;
   // Formatear número de cuenta tipo tarjeta (últimos 4 dígitos)
@@ -512,7 +526,10 @@ window.addEventListener('DOMContentLoaded', function() {
   }
 });
   
-// --- TRANSACCIONES: RESUMEN, FILTRO Y TIMELINE ---
+/**
+ * Renderiza el resumen, filtros y timeline de transacciones en el dashboard.
+ * @param {object} usuario - Objeto usuario a mostrar.
+ */
 function renderTransaccionesDashboard(usuario) {
   if (!usuario) return;
   const movimientos = JSON.parse(localStorage.getItem(`movimientos_${usuario.accountNumber}`)) || [];
@@ -709,3 +726,14 @@ window.addEventListener('DOMContentLoaded', function() {
       };
     }
   });
+
+const withdrawAllBtn = document.getElementById('withdrawAllBtn');
+if (withdrawAllBtn) {
+  withdrawAllBtn.onclick = function() {
+    // Obtener el saldo actual del usuario activo
+    let usuario = JSON.parse(localStorage.getItem('activeUser'));
+    if (usuario && usuario.balance > 0) {
+      document.getElementById('withdrawAmount').value = usuario.balance;
+    }
+  };
+}
